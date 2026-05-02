@@ -13,9 +13,8 @@ pipeline {
                 steps {
                     sh '''
                         rm -rf .terraform
-                        rm -rf ~/.terraform.d
-                        rm -rf /tmp/*
-                    '''
+                        rm -rf .terraform.lock.hcl
+                      '''
                 }
             }
         stage('Init') {
