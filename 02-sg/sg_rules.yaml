@@ -1,0 +1,118 @@
+- name: SG Rules
+  sg:
+  - expense-dev-db
+  - expense-dev-backend
+  - expense-dev-app-alb
+  - expense-dev-frontend
+  - expense-dev-web-alb
+  - expense-dev-vpn
+
+# Internet
+#    ↓
+# Web ALB (80/443)
+#    ↓
+# Frontend (80)
+#    ↓
+# App ALB (80)
+#    ↓
+# Backend (8080)
+#    ↓
+# DB (3306)
+
+
+# db_backend_3306
+# backend_app_alb_8080
+# app_alb_frontend_80
+# frontend_web_alb_80
+# web_alb_public_80
+# web_alb_public_443
+
+
+# We don't use bastion server here. Used VPN Server only.
+# "db_backend_3306"
+# "db_vpn_3306"
+
+# "backend_app_alb_8080"
+# "backend_vpn_ssh_22"
+# "backend_vpn_http_8080"
+
+# "app_alb_vpn_80" 
+# "app_alb_frontend_80"
+
+# "frontend_web_alb_80"
+# "frontend_vpn_22"
+
+# "web_alb_public_80" 
+# "web_alb_public_https_443" 
+
+# "vpn_public_22" 
+
+# "backend_default_vpc_22"
+# "frontend_default_vpc_22
+
+
+  db:
+  - name: db_backend_3306
+    desc: db accepting connections from backend
+    source: backend
+    port: 3306
+  - name: db_vpn_3306
+    desc: db accepting connections from vpn
+    source: vpn
+    port: 3306
+  backend:
+  - name: backend_app_alb_8080
+    desc: backend accepting connections from app alb
+    source: app_alb
+    port: 8080
+  - name: backend_vpn_ssh_22
+    desc: backend accepting connections from VPN
+    source: vpn
+    port: 22
+  - name: backend_vpn_http_8080
+    desc: backend accepting connections from VPN
+    source: vpn
+    port: 8080
+  app_alb:
+  - name: app_alb_vpn_80
+    desc: app alb accepting connections from VPN
+    source: vpn
+    port: 80
+  - name: app_alb_frontend_80
+    desc: app alb accepting connections from frontend instances
+    source: frontend
+    port: 80
+  frontend:
+  - name: frontend_web_alb_80
+    desc: frontend accepting connections from web ALB
+    source: web_alb
+    port: 80
+  - name: frontend_vpn_22
+    desc: frontend accepting connections from vpn
+    source: vpn
+    port: 22
+  web_alb:
+  - name: web_alb_public_80
+    desc: web alb accepting connections from public
+    source: public
+    port: 80
+  - name: web_alb_public_https_443
+    desc: web alb accepting connections from public
+    source: public
+    port: 443
+  vpn:
+  - name: vpn_public_22_443_943_1194
+    desc: vpn accepting connections from public
+    source: public
+    port: 943, 443, 22, 1194
+ 
+
+
+  - expense-dev-bastion
+# "db_bastion_3306"
+# "backend_bastion_22"
+# "backend_bastion_http_8080"
+# "app_alb_bastion_80"
+# "frontend_bastion_22" 
+# "frontend_bastion_http_80" 
+# "bastion_public_22" 
