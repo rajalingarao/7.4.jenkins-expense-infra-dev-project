@@ -19,7 +19,10 @@ pipeline {
                         terraform plan
                         ls 
                         pwd
+                        cd ..
+                        pwd
                         cd 02-sg
+                        pwd
                         terraform init -reconfigure
                         terraform plan
 
