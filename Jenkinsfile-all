@@ -17,37 +17,33 @@ pipeline {
                         cd 01-vpc
                         terraform init -reconfigure
                         terraform plan
-                        ls 
-                        pwd
-                        cd ..
-                        pwd
-                        cd 02-sg
-                        pwd
+
+                        cd ../02-sg/
                         terraform init -reconfigure
                         terraform plan
 
-                        cd 04-db
+                        cd ../04-db/
                         terraform init -reconfigure
                         terraform plan
 
-                         cd 05-vpn
+                        cd ../05-vpn/
                         terraform init -reconfigure
                         terraform plan
                         terraform apply -auto-approve
                     
-                        cd 06-app-alb
+                        cd ../06-app-alb/
                         terraform init -reconfigure
                         terraform plan
 
-                        cd 08-acm
+                        cd ../08-acm/
                         terraform init -reconfigure
                         terraform plan
 
-                        cd 09-web-alb
+                        cd ../09-web-alb/
                         terraform init -reconfigure
                         terraform plan
 
-                        cd 11-cdn
+                        cd ../11-cdn/
                         terraform init -reconfigure
                         terraform plan
                     """
@@ -73,22 +69,22 @@ pipeline {
                         cd 01-vpc
                         terraform apply -auto-approve
 
-                        cd 02-sg 
+                        cd ../02-sg/
                         terraform apply -auto-appvoe
                         
-                        cd 04-db
+                        cd ../04-db/
                         terraform apply -auto-approve
 
-                        cd 06-app-alb
+                        cd ../06-app-alb/
                         terraform apply -auto-approve
 
-                        cd 08-acm
+                        cd ../08-acm/
                         terraform apply -auto-approve
 
-                        cd 09-web-alb
+                        cd ../09-web-alb/
                         terraform apply -auto-approve
 
-                        cd 11-cdn
+                        cd ../11-cdn/
                         terraform apply -auto-approve
                     """
                 }
@@ -107,25 +103,25 @@ pipeline {
                 cd 11-cdn
                 terraform destroy -auto-approve
                 
-                cd 09-web-alb
+                cd ../09-web-alb/
                 terraform destroy -auto-approve
 
-                cd 08-acm
+                cd ../08-acm/
                 terraform destroy -auto-approve
 
-                cd 06-app-alb
+                cd ../06-app-alb/
                 terraform destroy -auto-approve
 
-                cd 05-vpn
+                cd ../05-vpn/
                 terraform destroy -auto-approve
 
-                cd 04-db
+                cd ../04-db/
                 terraform destroy -auto-approve
 
-                cd 02-sg
+                cd ../02-sg/
                 terraform destroy -auto-approve
 
-                cd 01-vpc
+                cd ../01-vpc/
                 terraform destroy -auto-approve
                 """
             }
