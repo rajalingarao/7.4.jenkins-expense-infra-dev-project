@@ -9,7 +9,8 @@ backend "s3" {
   bucket = "docker1-remote-state"
   key = "infra-jenkins-app-alb"
   region = "us-east-1"
-  dynamodb_table = "docker1-locking"
+  #dynamodb_table = "docker1-locking"
+  use_lockfile = true
   }
 }
 provider "aws" {
