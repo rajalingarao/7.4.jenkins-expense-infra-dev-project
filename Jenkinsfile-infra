@@ -1,0 +1,134 @@
+pipeline {
+    agent {
+        label 'AGENT-1'
+    }
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    parameters {
+        choice(name: 'action', choices: ['Destroy'], description: 'Pick something')
+    }
+    stages {
+        stage('VPC') {
+            steps {
+                sh """
+                cd 01-vpc
+                terraform init -reconfigure
+                terraform plan
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('SG') {
+            steps {
+                sh """
+                cd 02-sg
+                terraform init -reconfigure
+                terraform plan
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('DB') {
+            steps {
+                sh """
+                cd 04-db
+                terraform init -reconfigure
+                terraform plan
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('VPN') {
+            steps {
+                sh """
+                cd 05-vpn
+                terraform init -reconfigure
+                terraform plan
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('APP-ALB') {
+            steps {
+                sh """
+                cd 06-app-alb
+                terraform init -reconfigure
+                terraform plan
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('ACM') {
+            steps {
+                sh """
+                cd 07-acm
+                terraform init -reconfigure
+                terraform plan
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('WEB-ALB') {
+            steps {
+                sh """
+                cd 09-web-alb
+                terraform init -reconfigure
+                terraform plan
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('CDN') {
+            steps {
+                sh """
+                cd 11-cdn
+                terraform init -reconfigure
+                terraform plan
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('Destroy') {
+            when {
+                expression{
+                    params.action == 'Destroy'
+                }
+            }
+            steps {
+                sh """
+                cd 11-cdn
+                terraform destroy -auto-approve
+                cd 09-web-alb
+                terraform destroy -auto-approve
+                cd 08-acm
+                terraform destroy -auto-approve
+                cd 06-app-alb
+                terraform destroy -auto-approve
+                cd 05-vpn
+                terraform destroy -auto-approve
+                cd 04-db
+                terraform destroy -auto-approve
+                cd 02-sg
+                terraform destroy -auto-approve
+                cd 01-vpc
+                terraform destroy -auto-approve
+                """
+            }
+        }
+    }
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
+            deleteDir()
+        }
+        success { 
+            echo 'I will run when pipeline is success'
+        }
+        failure { 
+            echo 'I will run when pipeline is failure'
+        }
+    }
+ }

@@ -6,7 +6,6 @@ resource "aws_key_pair" "vpn" {
   # ~ means windows home directory
 }
 
-
 module "vpn" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   key_name = aws_key_pair.vpn.key_name
@@ -25,3 +24,25 @@ module "vpn" {
     }
   )
 }
+
+# create R53 record for RDS endpoint
+module "records" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  version = "~> 2.0"
+
+  zone_name = var.zone_name
+
+ records = [
+      {
+        name = "vpn"
+        type = "A"
+        ttl  = 1
+        records = [
+          module.vpn.public_ip
+        ]
+        allow_overwrite = true
+      } 
+    ]
+}
+
+

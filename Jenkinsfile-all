@@ -9,14 +9,6 @@ pipeline {
         choice(name: 'ACTION', choices:['Apply', 'Destroy'],, description: 'Pick something')
     } 
     stages {
-        stage('Clean Workspace') {
-                steps {
-                    sh '''
-                        rm -rf .terraform
-                        rm -rf .terraform.lock.hcl
-                      '''
-                }
-            }
         stage('Init') {
             steps {
                script{
